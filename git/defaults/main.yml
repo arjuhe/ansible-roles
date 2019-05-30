@@ -1,0 +1,6 @@
+---
+user: "{{ ansible_env.USER }}"
+homedir: "{{ ansible_env.HOME }}"
+git_config: "{{ homedir }}/.gitconfig"
+git_excludes: "{{ homedir }}/.gitexcludes"
+bash_profile: "{{ homedir }}/.bash_profile"
