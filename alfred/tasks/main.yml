@@ -1,0 +1,41 @@
+---
+- name: ALFRED
+  homebrew_cask:
+    state: present
+    name: alfred
+- name: Clone the Alfred repo.
+  block:
+  - stat:
+      path: "{{ homedir }}/proj/alfred"
+    register: result
+  - git:
+      dest: "{{ homedir }}/proj/alfred"
+      repo: git@github.com:arjuhe/alfred.git
+      clone: yes
+    when: result.stat.exists == false
+- name: Check if Alfred is already installed
+  - stat:
+      path: '{{ homedir }}/Library/Application Support/Alfred 3'
+    register: result
+- name: Install Alfred
+  block:
+  - copy:
+      remote_src: yes
+      src: '{{ homedir }}/Library/Application Support/Alfred 3'
+      dest: '{{ homedir }}/Library/Application Support/Alfred 3.OLD'
+      owner: "{{ ansible_env.USER }}"
+      group: staff
+      mode: 0755
+  - file:
+      src: '{{ homedir }}/Library/Application Support/Alfred 3'
+      state: absent
+  - file:
+      src: "{{ homedir }}/proj/alfred/3"
+      dest: '{{ homedir }}/Library/Application\ Support/Alfred\ 3'
+      owner: "{{ user }}"
+      group: staff
+      state: link
+  when: result.stat.exists == true
+- debug:
+    msg: "To complete the install you must restart Alfred and then add the license key again."
+
