@@ -1,0 +1,25 @@
+# I install additional packages and repos.
+---
+- name: Install python dependancies
+  yum:
+    name:   '{{ item }}'
+    state:  "latest"
+  with_items:
+    - "python-devel"
+    - "pyOpenSSL"
+    - "python-setuptools"
+
+- name: Install pip
+  easy_install:
+    name:   "pip==8.1.0"
+    state:  "latest"
+
+- name: Upgrade python-setuptools
+  pip:
+    name:   "setuptools"
+    state:  "latest"
+
+- name: Install ansible client.
+  pip:
+    name:   "ansible"
+    state:  "present"

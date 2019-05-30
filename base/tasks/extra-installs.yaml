@@ -1,0 +1,38 @@
+# I install additional packages and repos.
+---
+- name: Install additional repos
+  yum:
+    name: '{{ item  }}'
+  with_items:
+    - epel-release
+    - 'https://www.rdoproject.org/repos/rdo-release.rpm'
+
+- name: Install updates
+  yum:
+    name: '*'
+    state: "latest"
+  when: ansible_os_family == "RedHat"
+
+- name: Install extra helpful packages
+  yum:
+    name: '{{ item  }}'
+  with_items:
+    - bash-completion
+    - gcc
+    - rsync
+    - htop
+    - tmux
+    - screen
+    - vim
+    - nano
+    - unzip
+    - wget
+    - net-tools
+    - smartmontools
+    - git
+    - python-devel
+    - pyOpenSSL
+
+- name: Group install development-tools
+  shell:  'yum -y groupinstall "Development Tools"'
+

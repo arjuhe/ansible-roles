@@ -1,0 +1,79 @@
+---
+- include: extra-installs.yaml
+
+- include: ansible-client.yaml
+
+# This should be an include.
+- name: copy aliases.sh
+  copy:
+    backup: false
+    remote_src: false
+    src: files/aliases.sh
+    dest: /etc/profile.d/aliases.sh
+    owner: root
+    group: root
+    mode: 0644
+
+# This should be an include: Install & config vim.
+# - name: Copy .vimrc user root
+#   copy:
+#     backup: false
+#     remote_src: false
+#     src: files/vimrc
+#     dest: ~/.vimrc
+#     owner: root
+#     group: root
+#     mode: 0644
+
+
+- name: Create user aldo
+  user:
+    name:     aldo
+    state:    present
+    # group:
+    groups:   "wheel"
+    password: '$6$hoEUV.Ke$.UyrHvBdSXopMMGfPIPGmkJYOlAQYnsEy2zyOhv6lpRex5dBP7TgRSo3NowUtq7bXwyAUWeBOYH2qp99E1Bio0'
+    shell:    /bin/bash
+    uid:      1001
+
+- name: Create aldo.sudoers file
+  template:
+    src:      "etc/sudoers.d/aldo.j2"
+    dest:     "/etc/sudoers.d/aldo"
+    owner:    "root"
+    group:    "root"
+    mode:     "0775"
+    validate: "visudo -cf %s"
+
+- name: Check sudoers is set to 4 hours
+  shell:  "grep ^Defaults.*.timestamp_timeout=240 /etc/sudoers"
+  always_run: True
+  register: sudoers_4hr_check
+  ignore_errors: True
+
+- name: Set sudo to 4 hours
+  blockinfile:
+    dest:     /etc/sudoers
+    backup:   false
+    owner:    root
+    group:    root
+    mode:     0440
+    marker:   "\n### {mark} ANSIBLE MANAGED BLOCK ###"
+    state:    present
+    block: |
+      # This will result in 4 hour timeouts for sudo session credentials.
+      # To reset the timeout run: sudo -k; sudo -v
+      Defaults    timestamp_timeout=240 # 4 hours
+  when: "{{ sudoers_4hr_check.rc }} == 1"
+
+
+# # Create role folders.
+# # for i in defaults files handlers tasks templates;do
+# #   mkdir -p roles/step-one/$i
+# #   if [[ "$i" == "files" ]] || [[ "$i" == "templates" ]];then
+# #     continue
+# #   else
+# #     echo "---" > roles/step-one/$i/main.yaml
+# #   fi
+# # done
+
