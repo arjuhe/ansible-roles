@@ -1,0 +1,21 @@
+---
+brew_installs:
+  - gcc
+  - rsync
+  - htop
+  - tmux
+  - unzip
+  - wget
+  - net-tools
+  - smartmontools
+  - git
+  - wifi-password
+  - sf-pwgen
+  - figlet
+  - cowsay
+  - ipcalc
+  - nano
+  - mutt
+  - neofetch
+  - tmux
+  - screen

@@ -1,0 +1,47 @@
+---
+- name: Homebrew additional installs
+  homebrew:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ brew_installs }}"
+
+- name: brew install git
+  homebrew:
+    state: present
+    name: git
+
+- name: Install appCleaner | https://freemacsoft.net/appcleaner/
+  homebrew_cask:
+    name: appcleaner
+    state: latest
+
+- name: Install iTerm2 | https://www.iterm2.com/
+  homebrew_cask:
+    name: iterm2
+    state: latest
+
+- name: Install ITSYCAL | https://www.mowglii.com/itsycal/
+  homebrew_cask:
+    name: itsycal
+    state: latest
+
+- name: Install Sublime Text
+  homebrew_cask:
+    name: sublime-text
+    state: latest
+
+- block:
+  - name: Install Yubikey Neo Manager
+    homebrew_cask:
+      name: yubikey-neo-manager
+      state: latest
+  - name: Install Yubikey personalization GUI
+    homebrew_cask:
+      name: yubikey-personalization-gui
+      state: latest
+
+- name: Install Numi | https://numi.io/
+  homebrew_cask:
+    name: numi
+    state: present
+
