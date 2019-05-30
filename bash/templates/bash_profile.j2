@@ -1,0 +1,69 @@
+#Customizing iTerm. Creating a display profile with pastel colors
+export LANG=en_US.UTF-8
+set meta-flag on
+set input-meta on
+set output-meta on
+set convert-meta off
+
+
+# Change the window title of X terminals
+#case $TERM in
+#screen)
+#    PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
+#;;
+#esac
+
+# Open Multiple iTerms
+function iTerms() {
+    COMMANDS=("source bin/activate" "add another here" "continue likewise")
+    for command in $COMMANDS
+        do osascript -e \
+        "tell application \"iTerm.\" to do script with command \"$command\""
+    done
+}
+
+source /Users/ahern/.iterm2_shell_integration.bash
+
+# Open a file in sublime.
+subl() {
+	echo "Opening: Sublime Text 2.app"
+  /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl ${1}
+}
+
+# Alias to control mnemonicly control System Integrity without having to
+# remember csrutil
+systemintegrity() {
+	echo "Opening: /usr/bin/csrutil"
+  /usr/bin/csrutil ${1}
+}
+
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  source $(brew --prefix)/etc/bash_completion
+fi
+
+
+# This was moved to ~/.bashrc
+# export PATH="${PATH}:/usr/local/bin/ansible"
+# export PATH="${PATH}:~/scripts"
+# export PATH=$PATH:/Applications/VMware\ Fusion.app/Contents/Library
+
+# ansible completions
+comp_files=(  "$(ls ~/proj/home/etc/bash_completion.d/ansible-completion/*.bash)" )
+for file in ${comp_files};do
+  source ${file}
+done
+
+
+# pip bash completion start
+_pip_completion()
+{
+    COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+                   PIP_AUTO_COMPLETE=1 $1 ) )
+}
+complete -o default -F _pip_completion pip
+# pip bash completion end
+
+export PATH="/usr/local/sbin:$PATH"
+

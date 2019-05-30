@@ -1,0 +1,8 @@
+---
+shells_file: /etc/shells
+bash_profile: "{{ homedir }}/.bash_profile"
+bashrc: "{{ homedir }}/.bashrc"
+user: "{{ ansible_env.USER }}"
+homedir: "{{ ansible_env.HOME }}"
+
+

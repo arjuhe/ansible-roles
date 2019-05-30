@@ -1,0 +1,63 @@
+---
+- name: Install bash
+  homebrew:
+    state: present
+    name: bash
+  register: result
+
+- name: Add bash to shells file
+  lineinfile:
+    state: present
+    path: "{{ shells_file }}"
+    regexp: '^\/usr\/local\/bin\/bash'
+    line: '/usr/local/bin/bash'
+    insertbefore: '^\/bin\/bash'
+    owner: root
+    group: wheel
+    mode: 0644
+
+- name: Add bash-completions to bash profile
+  lineinfile:
+    state: present
+    path: "{{ bash_profile }}"
+    regexp: '^source \/usr\/local\/etc\/bash_completion.sh'
+    line: 'source /usr/local/etc/bash_completion.sh'
+    owner: "{{ user }}"
+    mode: 0755
+
+# create a directory if it doesn't exist
+- file:
+    path: "{{ home }}/.config"
+    state: directory
+    owner: "{{ user }}"
+    group: staff
+    mode: 0775
+
+- file:
+    path: "{{ home }}/.config/bash"
+    state: directory
+    owner: "{{ user }}"
+    group: staff
+    mode: 0775
+
+- template:
+    src: aliases.bash.j2
+    dest: "{{ home }}/.config/bash/aliases.sh"
+    owner: "{{ user }}"
+    group: staff
+    mode: 0644
+
+- name: Install bash-completion
+  homebrew:
+    state: present
+    name: bash-completion
+
+- name: Install additional completions
+  homebrew:
+    state: present
+    name: [ 'launchctl-completion',
+            'open-completion',
+            'ruby-completion',
+            'tmuxinator-completion',
+            'pip-completion',
+            'brew-cask-completion']

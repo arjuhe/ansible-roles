@@ -1,0 +1,151 @@
+#!/bin/bash
+
+# [ -r "/etc/bashrc_$TERM_PROGRAM"  ] && . "/etc/bashrc_$TERM_PROGRAM" || echo "${TERM_PROGRAM}: FAILED"
+
+# Setup PATH
+# export PATH="${PATH}:/usr/local/bin/ansible"
+export PATH="~/scripts:${PATH}"
+export PATH="#{HOME}/Library/Python/2.7/bin:${PATH}"
+# export PATH=$PATH:/Applications/VMware\ Fusion.app/Contents/Library
+# export PATH="/usr/local/opt/findutils/libexec/gnubin:${PATH}"
+export PATH="/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
+export PATH="/Users/ahern/.local/bin:${PATH}"
+export PATH="/Users/ahern/proj/home/sbin:${PATH}"
+
+sourceIt() {
+  local files=( "$@" )
+  case ${files[@]} in
+    *verbose*)
+      #echo ${#files[@]:(-1)}
+      for i in "${files[@]}";do
+        if [[ "$i" == "verbose" ]];then
+          continue
+        fi
+        printf "%-35s" "$(basename ${i})"
+        source "${i}" && printf "\e[32m%2s\e[39m \n" "[   OK   ]" || printf "\e[31m%s[ FAILED ]\e[39m\n"
+      done
+      ;;
+    *)
+      source ${files[0]}
+      ;;
+  esac
+}
+
+# Enable global completions
+# c_path=/usr/local/etc/bash_completion.d
+# c_files=( $( ls $c_path) )
+# c_count="$(( ${#c_files[@]} -1 ))"
+# for i in ${!c_files[@]};do
+#   c_files[$i]="${c_path}/${c_files[$i]}"
+# done
+# sourceIt "${c_files[@]}" "verbose"
+
+
+### BASH COMPLETIONS
+# brew install bash_completions
+sourceIt "/usr/local/etc/profile.d/bash_completion.sh" "verbose"                    # Brew global completions
+sourceIt "${HOME}/.config/openstack/openstack.bash_completion" "verbose"            # Openstack completions
+comp_files=("$(ls ~/proj/home/etc/bash_completion.d/ansible-completion/*.bash)")    # ansible completions
+for file in ${comp_files}; do
+  sourceIt "${file}" "verbose"
+done
+sourceIt "${HOME}/proj/home/home/git/git-completion.bash" "verbose"                 # git completions
+# sourceIt "${HOME}/.password-store/.extensions/pass.bash_completion" "verbose"
+# "/usr/local/Cellar/pass/1.7.3/etc/bash_completion.d/pass" "verbose"        # pass completions
+sourceIt "${HOME}/proj/ctrl-keyboard/qmk_firmware/autocomplete.sh" "verbose"        # qmk_firmware completions
+# sourceIt "/usr/local/Cellar/docker/18.09.2/etc/bash_completion.d/docker" "verbose"  # docker compeltions
+
+
+### SAMPLE ###
+# Load bashrc for the specific terminal being used.
+# sourceIt "/etc/bashrc_${TERM_PROGRAM}" verbose is optional
+
+# Enable system_intergity
+sourceIt "${HOME}/.functions/system_integrity"
+
+# Enable iterm_title
+sourceIt "${HOME}/.functions/iterm_title" #"verbose"
+
+# Enable ldap_search
+sourceIt "${HOME}/.functions/ldap_search"
+
+# Enable find-function.
+sourceIt "${HOME}/proj/github/gists/find-function.sh" "verbose"
+
+# Enable git-prompt
+sourceIt "${HOME}/proj/home/home/git/git-prompt.bash" #"verbose"
+
+# Enable custon ps1 prompt.
+sourceIt "${HOME}/proj/home/home/bash-prompt.bash" #"verbose"
+
+# Enable bash aliases
+sourceIt "${HOME}/proj/home/home/aliases.bash" "verbose"
+
+# Enable SSH ALIASES
+aliases_dir="${HOME}/.config/redhat/ssh_aliases"
+ssh_aliases=($(ls ${aliases_dir}/))
+for alias in ${ssh_aliases[@]};do
+  sourceIt "${aliases_dir}/${alias}" "verbose"
+done
+
+
+
+# Virtualenv and virtualenvwrapper
+# ================================
+# Usage:
+#   mkvirtualenv <NEW VIRTUALENV NAME>
+#   rmvirtualenv <VIRTUALENV NAME>
+#   workon <VIRTUALENV NAME>
+export WORKON_HOME=/Users/ahern/.virtualenvs
+# Isolate virtualenvs from the site-packages directory
+#export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
+# Share the workon dir for virtualenvs as virtualenvwrapper
+#export PIP_VIRTUALENV_BASE=$WORKON_HOME
+# makes pip detect an active virtualenv and install to it
+#export PIP_RESPECT_VIRTUALENV=true
+sourceIt "/usr/local/bin/virtualenvwrapper.sh"
+
+
+
+
+# ~/proj/sendez.net/scripts/macSpecific/urlShortners.sh
+# Usage:
+#   goo.gl [URL]          Shorten a URL using the Google URL Shortener.
+#   bit.ly [URL]          Shorten a URL using the Bit.ly URL Shortener.
+sourceIt "${HOME}/proj/sendez.net/scripts/macSpecific/urlShortners.sh"
+
+
+# Print date-ymdt (example: 20180501.185051)
+alias date-ymd-t='date +%Y%m%d.%H%M%S' 					# Print date-time (example: 20180501.185051)
+alias now='date +%Y%m%d.%H%M%S'
+# Print date in reverse (example:20180501)
+alias date-ymd='date +%Y%m%d' 								# Print date in reverse (example:20180501)
+# Print time in 24hr w/no seperator (example: 185051)
+alias date-t='date +%H%M%S' 								# Print time in 24hr w/no seperator (example: 185051)
+# Print date in reverse with dashes (example: 2018-05-01)
+alias date-y-m-d='date +%Y-%m-%d'					# Print date in reverse with dashes (example: 2018-05-01)
+
+# Becuase pip couldn't find  ibffi.
+export  PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
+
+alias rh-login="/usr/bin/kinit alhernan@REDHAT.COM"
+alias rh-lookup="/Users/ahern/proj/redhat/pnt/rhos-ops/usr/sbin/rhlookup.sh"
+alias rh-verify="/usr/bin/klist -v"
+
+# PWsafe
+alias pwsafe="/usr/local/bin/pwsafe -f ~/.password-store/.pwsafe/pwsafe.dat"
+
+
+# Add path for gerrit scripts
+export PATH="${PATH}:/Users/ahern/proj/redhat/personal/rh-alhernan/scripts/gerrit"
+
+# Add path for openstack scripts
+export PATH="${PATH}:/Users/ahern/proj/redhat/personal/rh-alhernan/scripts/openstack"
+
+function switchlogin {  ssh -K acs-bastion.util.phx2.redhat.com -l alhernan -t ssh" $1" -o StrictHostKeyChecking=no; }
+export -f switchlogin
+
+#	../roles/user-report/
+
+uptime
+
