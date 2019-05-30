@@ -1,0 +1,49 @@
+---
+# tasks file for roles/disks
+
+- name: Logical Volume Groups
+  lvg:
+      vg: undefined # required. The name of the volume group.
+      vg_options: undefined # not required. Additional options to pass to C(vgcreate) when creating the volume group.
+      pvs: undefined # not required. List of comma-separated devices to use as physical devices in this volume group. Required when creating or resizing volume group.,The module will take care of running pvcreate if needed.
+      force: no # not required. If C(yes), allows to remove volume group with logical volumes.
+      pesize: 4 # not required. The size of the physical extent. pesize must be a power of 2, or multiple of 128KiB. Since version 2.6, pesize can be optionally suffixed by a UNIT (k/K/m/M/g/G), default unit is megabyte.
+      pv_options: undefined # not required. Additional options to pass to C(pvcreate) when creating the volume group.
+      state: absent # not required. choices: absent;present. Control if the volume group exists.
+
+- name: Logical Volumes
+  lvol:
+      pvs: undefined # not required. Comma separated list of physical volumes (e.g. /dev/sda,/dev/sdb).
+      force: no # not required. Shrink or remove operations of volumes requires this switch. Ensures that that filesystems get never corrupted/destroyed by mistake.
+      vg: undefined # not required. The volume group this logical volume is part of.
+      lv: undefined # not required. The name of the logical volume.
+      resizefs: no # not required. Resize the underlying filesystem together with the logical volume.
+      state: absent # not required. choices: absent;present. Control if the logical volume exists. If C(present) and the volume does not already exist then the C(size) option is required.
+      thinpool: undefined # not required. The thin pool volume name. When you want to create a thin provisioned volume, specify a thin pool volume name.
+      snapshot: undefined # not required. The name of the snapshot volume
+      active: yes # not required. Whether the volume is activate and visible to the host.
+      shrink: yes # not required. Shrink if current size is higher than size requested.
+      opts: undefined # not required. Free-form options to be passed to the lvcreate command.
+      size: undefined # not required. The size of the logical volume, according to lvcreate(8) --size, by default in megabytes or optionally with one of [bBsSkKmMgGtTpPeE] units; or according to lvcreate(8) --extents as a percentage of [VG|PVS|FREE]; Float values must begin with a digit. Resizing using percentage values was not supported prior to 2.1.
+
+- name: Partition Volumes
+    parted:
+        device: undefined # required. The block device (disk) where to operate.
+        part_start: 0% # not required. Where the partition will start as offset from the beginning of the disk, that is, the "distance" from the start of the disk. The distance can be specified with all the units supported by parted (except compat) and it is case sensitive. E.g. C(10GiB), C(15%).
+        part_end: 100% # not required. Where the partition will end as offset from the beginning of the disk, that is, the "distance" from the start of the disk. The distance can be specified with all the units supported by parted (except compat) and it is case sensitive. E.g. C(10GiB), C(15%).
+        name: undefined # not required. Sets the name for the partition number (GPT, Mac, MIPS and PC98 only).
+        align: none # not required. choices: none;cylinder;minimal;optimal. Set alignment for newly created partitions.
+        number: undefined # not required. The number of the partition to work with or the number of the partition that will be created. Required when performing any action on the disk, except fetching information.
+        label: aix # not required. choices: aix;amiga;bsd;dvh;gpt;loop;mac;msdos;pc98;sun. Creates a new disk label.
+        state: present # not required. choices: present;absent;info. If to create or delete a partition. If set to C(info) the module will only return the device information.
+        part_type: primary # not required. choices: primary;extended;logical. Is one of 'primary', 'extended' or 'logical' and may be specified only with 'msdos' or 'dvh' partition tables. A name must be specified for a 'gpt' partition table. Neither part-type nor name may be used with a 'sun' partition table.
+        flags: undefined # not required. A list of the flags that has to be set on the partition.
+        unit: s # not required. choices: s;B;KB;KiB;MB;MiB;GB;GiB;TB;TiB;%;cyl;chs;compact. Selects the current default unit that Parted will use to display locations and capacities on the disk and to interpret those given by the user if they are not suffixed by an unit. When fetching information about a disk, it is always recommended to specify a unit.
+
+- name: Format disks
+  filesystem:
+      dev: undefined # required. Target path to device or image file.
+      fstype: btrfs # required. choices: btrfs;ext2;ext3;ext4;ext4dev;f2fs;lvm;ocfs2;reiserfs;xfs;vfat. Filesystem type to be created.,reiserfs support was added in 2.2.,lvm support was added in 2.5.,since 2.5, I(dev) can be an image file.,vfat support was added in 2.5,ocfs2 support was added in 2.6,f2fs support was added in 2.7
+      resizefs: no # not required. If C(yes), if the block device and filesytem size differ, grow the filesystem into the space.,Supported for C(ext2), C(ext3), C(ext4), C(ext4dev), C(f2fs), C(lvm), C(xfs) and C(vfat) filesystems.,XFS Will only grow if mounted.,vFAT will likely fail if fatresize < 1.04.
+      force: no # not required. If C(yes), allows to create new filesystem on devices that already has filesystem.
+      opts: undefined # not required. List of options to be passed to mkfs command.
