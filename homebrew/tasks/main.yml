@@ -1,0 +1,20 @@
+---
+- name: Install homebrew
+  shell: '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /usr/bin/yes'
+
+- name: Add homebrew to system PATH
+  lineinfile:
+    path: "{{ bash_profile }}"
+    state: present
+    regex: '^export PATH=\"\/usr\/local\/sbin:\$PATH\"'
+    line: 'export PATH="/usr/local/sbin:$PATH"'
+
+- name: Update homebrew and upgrade all packages
+  homebrew:
+    update_homebrew: yes
+    upgrade_all: yes
+
+- name: Install homebrew Cask
+  homebrew:
+    name: [ 'cask', 'brew-cask-completion']
+    state: present
