@@ -1,0 +1,4 @@
+---
+user: "{{ ansible_env.USER }}"
+homedir: "{{ ansible_env.HOME }}"
+bash_profile: "{{ homedir }}/.bash_profile"

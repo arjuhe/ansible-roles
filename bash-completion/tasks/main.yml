@@ -1,0 +1,33 @@
+---
+- name: brew install bash-completion
+  homebrew:
+    state: present
+    name: bash-completion
+  when: ansible_distribution == 'MacOSX'
+
+- name: Check if completions where installed
+  stat:
+    path: "/usr/local/etc/profile.d/bash_completion.sh"
+  register: result
+
+# - name: Add completion to bash_profile
+- lineinfile:
+    state: present
+    path: "{{ bash_profile }}"
+    regexp: '\/usr\/local\/etc\/profile.d\/bash_completion.sh'
+    line: 'source /usr/local/etc/profile.d/bash_completion.sh'
+    owner: "{{ user }}"
+    mode: 0755
+  when: result.stat.exists == true
+
+- name: Additional installs
+  homebrew:
+    state: present
+    name: [ 'launchctl-completion',
+            'open-completion',
+            'ruby-completion',
+            'tmuxinator-completion',
+            'pip-completion',
+            'brew-cask-completion']
+
+
