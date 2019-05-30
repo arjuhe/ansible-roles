@@ -1,0 +1,47 @@
+---
+- name: Install VIM
+  block:
+    - homebrew:
+        name: macvim
+        state: latest
+      when: ansible_distribution == 'MacOSX'
+    - yum:
+        name: vim
+        state: latest
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: create ~/.vimrc
+  file:
+    path: "{{ vimrc }}"
+    mode: 0644
+    state: touch
+
+- name: setup vimrc
+  lineinfile:
+    path: "{{ vimrc }}"
+    state: present
+    regexp: "{{ item.test }}"
+    line: "{{ item.line }}"
+  loop:
+  - { test: '^set\ nocompatible', line: 'set nocompatible' }
+  - { test: '^syntax\ on', line: 'syntax on' }
+  - { test: '^colorscheme', line: 'colorscheme desert' }
+  - { test: '^set\ number', line: 'set number' }
+  - { test: '^set\ mouse', line: 'set mouse=a' }
+  - { test: '^set\ tabstop', line: 'set tabstop=2' }
+  - { test: '^set\ softtabstop', line: 'set softtabstop=0' }
+  - { test: '^set\ expandtab', line: 'set expandtab' }
+  - { test: '^set\ shiftwidth', line: 'set shiftwidth=2' }
+  - { test: '^set\ smarttab', line: 'set smarttab' }
+  - { test: '^set\ bs', line: 'set bs=2' }
+  - { test: '^set\ ruler', line: 'set ruler' }
+  - { test: '^set\ visualbell', line: 'set visualbell' }
+  - { test: '^set\ encoding', line: 'set encoding=utf-8' }
+  - { test: '^set\ wrap', line: 'set wrap' }
+  - { test: '^set\ textwidth', line: 'set textwidth=79' }
+  - { test: '^set\ laststatus', line: 'set laststatus=2' }
+  - { test: '^set\ showmode', line: 'set showmode' }
+  - { test: '^set\ showcmd', line: 'set showcmd' }
+  - { test: '^set\ listchars', line: 'set listchars=tab:▸\ ,eol:¬' }
+  - { test: '^set\ list$', line: 'set list' }
+

@@ -1,0 +1,2 @@
+---
+vimrc: "{{ ansible_env.HOME }}/.vimrc"
