@@ -1,0 +1,13 @@
+---
+- name: Setup SUDO
+  tags: SUDO
+  become: true
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ ansible_env.USER }}'
+    line: '{{ ansible_env.USER }} ALL=(ALL) NOPASSWD: ALL'
+    insertafter: '#\ Same\ thing\ without\ a\ password'
+    owner: root
+    group: wheel
+    mode: 0440
