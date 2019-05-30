@@ -1,0 +1,37 @@
+---
+- name:   Install vagrant
+  yum:
+    name: "https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1_x86_64.rpm"
+    state:  present
+
+- name:   Install required packages
+  yum:
+    name:   "{{ item }}"
+    state:  latest
+  with_items:
+    - qemu-img
+    - libvirt-devel
+    - rubygem-ruby-libvirt
+    - ruby-devel
+    - libxslt-devel
+    - libxml2-devel
+    - libguestfs-tools-c
+
+- name: Update ruby-libvirt
+  command:  gem update ruby-libvirt
+
+
+- name: Install vagrant-mutate plugin
+  command:  vagrant plugin install vagrant-mutate
+  register: stdout-vagrant-mutate
+
+- name: Install vagrant-libvirt plugin
+  command:  vagrant plugin install vagrant-libvirt
+  register: stdout-vagrant-libvirt
+
+- name: Download vagrant box.
+  command:  vagrant box add centos/7 --provider libvirt
+  register: stdout-vagrant-box-add
+
+
+

@@ -1,0 +1,21 @@
+---
+- name: alhernan
+  user:
+    name:     alhernan
+    comment:  Arnaldo Hernandez
+    password: $6$h/GvpX.t$bOp1lwzr5eqTMxNWdT6EyNvG4MFkcMW.Uzenv1KUVHwRkm46fsTc64fpW2xbBwsNpDyEvHbDXUXx8LD6jgAiH/
+    groups:   wheel
+    state:    present
+    remove:   no
+    shell:    /bin/bash
+
+- name: dmanchad
+  user:
+    name:     dmanchad
+    comment:  David Manchado
+    password: $6$Fz.ah/cQ43fGPjWA$7TtJ1VF68xVvfTwDznBAN7OSrRNkySgCFVpb2YiGgyRmM0XrLWYN8XFJrEqxA97BR2.1kSr2mSYGYwQyoegs
+    groups:   wheel
+    state:    absent
+    remove:   yes
+    shell:    /bin/bash
+
