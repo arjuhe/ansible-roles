@@ -1,0 +1,41 @@
+---
+extensions:
+- mushan.vscode-open-iterm2               # Open in iTerm2
+- vscoss.vscode-ansible                   # VSCode extension for Ansible
+- rupisaini.vscode-ansible-linter         # Ansible Linter
+- dhoeric.ansible-vault                   # Encrypt/decrypt ansible-vault file
+- annsk.alignment                         # Align code like in Sublime Text 3 Alignment Package
+- janjoerke.align-by-regex                # Aligns selected lines of text by a regular expression.
+- VisualStudioExptTeam.vscodeintellicode  # AI assisted developer productivity
+- austin.code-gnu-global                  # C/C++ Intellisense with the help of GNU Global tags
+- ms-vscode.cpptools                      # C/C++ IntelliSense, debugging, and code browsing.
+- magicstack.MagicPython                  # Syntax highlighter for cutting edge Python.
+- ms-python.python                        # Linting, Debugging (multi-threaded, remote), Intellisense, code formatting, refactoring, unit tests, snippets, and more.
+- batisteo.vscode-django                  # Beautiful syntax and scoped snippets for perfectionists with deadlines
+- bbenoist.vagrant                        # Vagrant support for Visual Studio Code
+- chrmarti.ssh                            # Edit SSH config and launch host configrations
+- Compilenix.vscode-zonefile              # Bind Zone File syntax highlighting
+- DavidAnson.vscode-markdownlint          # Markdown linting and style checking for Visual Studio Code
+- donjayamanne.githistory                 # View git log, file history, compare branches or commits
+- DotJoshJohnson.xml                      # XML Formatting, XQuery, and XPath Tools for Visual Studio Code
+- earshinov.sort-lines-by-selection       # Sort lines based on the text selected in each line
+- Tyriar.sort-lines                       # Sorts lines of text
+- EditorConfig.EditorConfig               # EditorConfig Support for Visual Studio Code
+- Equinusocio.vsc-material-theme          # The most epic theme now for Visual Studio Code
+- PKief.material-icon-theme               # Material Design Icons for Visual Studio Code
+- eriklynd.json-tools                     # Tools for manipulating JSON
+- fabiospampinato.vscode-diff             # Diff 2 opened files with ease. Because running `code --diff path1 path2` is too slow.
+- felipecaputo.git-project-manager        # Allows you to change easily between git projects.
+- gerane.Theme-Blackboard                 # Blackboard Theme ported from the Blackboard TextMate Theme
+- marcostazi.VS-code-vagrantfile          # Provides syntax highlighting support for Vagrantfile, useful if you use Vagrant
+- mechatroner.rainbow-csv                 # Highlight CSV and TSV files in different colors, Run SQL-like queries
+- ms-vscode.sublime-keybindings           # Import Sublime Text settings and keybindings into VS Code.
+- ms-vsliveshare.vsliveshare              # Real-time collaborative development from the comfort of your favorite tools.
+- myh.preview-vscode                      # A Markdown, ReStructured Text, HTML, Jade, Image, CSS, Mermaid previewer
+- patricklee.vsnotes                      # Simple VS Code extension for plain text note taking.
+- PeterJausovec.vscode-docker             # Adds syntax highlighting, commands, hover tips, and linting for Dockerfile and docker-compose files.
+- shakram02.bash-beautify                 # Format / Beautify bash and shell scripts
+- tht13.gerrit-vscode                     # A Gerrit extension for vscode
+- wholroyd.jinja                          # Jinja template language support for Visual Studio Code
+- yeluoqiuzhi.vscode-detect-charset       # show real charset in status bar
+- yzhang.markdown-all-in-one              # All you need to write Markdown (keyboard shortcuts, table of contents, auto preview and more)
