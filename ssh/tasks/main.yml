@@ -1,0 +1,46 @@
+---
+- name: Install ssh packages
+  yum:
+    name: '{{ item }}'
+  with_items:
+    - openssh-server
+    - openssh
+    - libssh2
+    - sshpass
+    - openssh-clients
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Copy sshd configuration file
+  template:
+    src: etc/ssh/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+  notify:
+    - Restart sshd
+
+- name: Disable SSH requiretty
+  replace:
+    dest:     "/etc/sudoers"
+    regexp:   '^Defaults\s*requiretty'
+    replace:  "#Defaults requiretty"
+    owner:    "root"
+    group:    "root"
+    mode:     0440
+    validate: "visudo -cf %s"
+
+- name: Enable root nopasswd
+  replace:
+    dest:     "/etc/sudoers"
+    regexp:   '^root\s*ALL\=.ALL.\s*ALL.*'
+    replace:  "root ALL=(ALL) NOPASSWD:ALL"
+    owner:    "root"
+    group:    "root"
+    mode:     0440
+    validate: "visudo -cf %s"
+
+- name: Install ssh keys into root user
+  authorized_key:
+    user: root
+    key: "{{ item }}"
+  with_items: '{{ ssh_keys }}'
+
+
