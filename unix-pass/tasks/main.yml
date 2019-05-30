@@ -1,0 +1,43 @@
+---
+- name: brew install pass and pass-otp
+  homebrew:
+    state: present
+    name: [ 'gnupg',
+            'gpg',
+            'gpg2',
+            'gpgme',
+            'pass',
+            'pass-otp',
+            'pinentry-mac']
+
+- name: install pass completion
+  lineinfile:
+    state: present
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    regexp: '\[\[ \-r \"/usr/local/etc/profile.d/bash_completion.sh\"'
+    line: '[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"'
+
+
+- name: clone pass repo
+  git:
+    repo: git@github.com:arjuhe/pass.git
+    dest: "{{ ansible_env.HOME }}/.password-store"
+#     clone: yes
+
+- name: Remove bad line from gpg-agent.conf
+  lineinfile:
+    state: absent
+    path: "{{ gpg_agent_config }}"
+    regexp: 'pinentry-program /usr/local/MacGPG2/libexec/pinentry-mac.app/Contents/MacOS/pinentry-mac'
+
+- name: Add good line to gpg-agent
+  lineinfile:
+    state: present
+    insertbefore: BOF
+    path: "{{ gpg_agent_config }}"
+    regexp: '^pinentry-program {{ pinentry_program }}'
+    line: "pinentry-program {{ pinentry_program }}"
+    owner: "{{ user }}"
+    group: staff
+    mode: 0600
+

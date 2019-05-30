@@ -1,0 +1,5 @@
+---
+user: "{{ ansible_env.USER }}"
+homedir: "{{ ansible_env.HOME }}"
+gpg_agent_config: "{{ homedir }}/.gnupg/gpg-agent.conf"
+pinentry_program: /usr/local/bin/pinentry-mac
