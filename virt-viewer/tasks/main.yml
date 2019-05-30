@@ -1,0 +1,13 @@
+---
+- name: Tap virt-manager
+  homebrew_tap:
+    state: present
+    name: jeffreywildman/virt-manager
+
+- name: Install virt-viewer and virt-manager
+  homebrew:
+    state: present
+    name: ['virt-viewer',
+          'virt-manager']
+
+
