@@ -1,0 +1,7 @@
+# CentOS tasks for gpg role.
+
+- name: "Yum install formulae: {{ centos_packages }}"
+  yum:
+    state: latest
+    name: "{{ item }}"
+  loop: "{{ centos_packages }}"

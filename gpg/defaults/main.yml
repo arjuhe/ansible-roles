@@ -1,0 +1,10 @@
+---
+# defaults file for roles/gpg
+brew_packages:
+  - gpg
+  - gpg2
+  - gpgme
+  - libgpg-error
+
+cask_packages:
+  - gpg-suite

@@ -1,0 +1,22 @@
+- name: Check that brew is installed
+  stat:
+    path: "{{ brew_bin }}"
+  register: result
+
+- name: Brew installs
+  block:
+    - name: Update brew formulae
+      shell: /usr/local/bin/brew update
+    - name: "brew install formulae: {{ brew_packages }}"
+      homebrew:
+        state: latest
+        name: "{{ item }}"
+      loop: "{{ brew_packages }}"
+    - name: "brew install casks: {{ cask_packages }}"
+      homebrew_cask:
+        state: latest
+        name: "{{ item }}"
+      loop: "{{ cask_packages }}"
+  when:
+  - result.stat.exists
+  - result.stat.executable
