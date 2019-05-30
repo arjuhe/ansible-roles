@@ -1,0 +1,10 @@
+---
+# - name: Install and configure Vagrant
+
+- homebrew_cask:
+    state: present
+    name: vagrant
+
+- homebrew:
+    state: present
+    name: vagrant-completion
